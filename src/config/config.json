@@ -1,0 +1,34 @@
+{
+  "site": {
+    "title": "Aravindraj Palani",
+    "base_url": "https://www.aravindraj.dev",
+    "base_path": "/",
+    "trailing_slash": false,
+    "favicon": "/images/favicon.png",
+    "logo_width": "200",
+    "logo_height": "34",
+    "logo_text": "Aravindraj Palani"
+  },
+
+  "settings": {
+    "pagination": 5,
+    "summary_length": 100
+  },
+
+  "metadata": {
+    "meta_author": "",
+    "meta_image": "",
+    "meta_description": ""
+  },
+
+  "params": {
+    "contact_form_action": "#",
+    "copyright": "Copyright © 2025 a theme by [Themefisher](https://themefisher.com)"
+  },
+
+  "contactinfo": {
+    "address": "",
+    "email": "",
+    "phone": ""
+  }
+}
