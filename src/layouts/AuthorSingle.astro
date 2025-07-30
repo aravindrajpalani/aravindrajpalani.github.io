@@ -5,7 +5,7 @@ import { Image } from "astro:assets";
 import { render } from "astro:content";
 
 const { author } = Astro.props;
-const { title } = author.data;
+const { title, image } = author.data;
 const { Content } = await render(author);
 ---
 
