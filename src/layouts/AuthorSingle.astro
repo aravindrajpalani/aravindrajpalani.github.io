@@ -5,7 +5,7 @@ import { Image } from "astro:assets";
 import { render } from "astro:content";
 
 const { author } = Astro.props;
-const { title, image, social } = author.data;
+const { title } = author.data;
 const { Content } = await render(author);
 ---
 
@@ -27,7 +27,7 @@ const { Content } = await render(author);
       }
       <h1 set:html={markdownify(title)} class="page-heading h2 mb-8" />
 
-      <Social source={social} className="social-icons-simple" />
+     
       <div class="content">
         <Content />
       </div>
