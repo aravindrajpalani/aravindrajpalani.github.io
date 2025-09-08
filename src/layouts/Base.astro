@@ -8,6 +8,7 @@ import Header from "@/partials/Header.astro";
 import "@/styles/main.css";
 import { AstroFont } from "astro-font";
 import { ClientRouter } from "astro:transitions";
+import { SimpleAnalytics } from 'astro-simpleanalytics-plugin';
 
 // font families
 const pf = theme.fonts.font_family.primary;
@@ -176,5 +177,6 @@ const { title, meta_title, description, image, noindex, canonical } =
       <slot />
     </main>
     <Footer />
+    <SimpleAnalytics/>
   </body>
 </html>
