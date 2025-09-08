@@ -12,7 +12,7 @@ let highlighter;
 async function getHighlighter() {
   if (!highlighter) {
     const { getHighlighter } = await import("shiki");
-    highlighter = await getHighlighter({ theme: "one-dark-pro" });
+    highlighter = await getHighlighter({ theme: "one-dark-pro" , langs: ['kotlin']});
   }
   return highlighter;
 }
