@@ -90,7 +90,7 @@ public class ExecutorServiceExample {
 
 ##### ScheduledExecutorService
 ScheduledExecutorService is an interface that extends ExecutorService interface. ScheduledExecutorService provides schedule() method which accepts Runnable or Callable task objects that runs after a specified delay.  
-<img src="../../../public/images/posts/java-executor-hierarchy.svg" alt="Java executor framework hierarchy" style="width: 100%; height: auto;"/>  
+<img src="/images/posts/java-executor-hierarchy.svg" alt="Java executor framework hierarchy" style="width: 100%; height: auto;"/>  
 <sub><i>Relationship between different executors in java.util.concurrent package</i></sub>
 ### ThreadPoolExecutor
 Each thread object consumes significant amount of memory and thread creation is a overhead. If we have many asynchronous tasks, then creating a new thread of each task is not a optimal solution. Most Executor implementations in java.util.concurrent package uses thread pool containing worker threads which are reused.  
