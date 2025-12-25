@@ -1,0 +1,141 @@
+---
+// src/components/Tabs.astro
+interface Props {
+  tabs: string[];
+  defaultTab?: number;
+}
+
+const { tabs, defaultTab = 0 } = Astro.props;
+const tabId = `tabs-${Math.random().toString(36).substr(2, 9)}`;
+---
+
+<div class="tabs-container" data-tab-container={tabId}>
+  <!-- Tab Headers -->
+  <div class="tab-headers" role="tablist">
+    {tabs.map((tab, index) => (
+      <button
+        class={`tab-header ${index === defaultTab ? 'active' : ''}`}
+        role="tab"
+        aria-selected={index === defaultTab ? 'true' : 'false'}
+        data-tab={index}
+      >
+        {tab}
+      </button>
+    ))}
+  </div>
+
+  <!-- Tab Content Slots -->
+  <div class="tab-contents">
+    <slot />
+  </div>
+</div>
+
+<style>
+  .tabs-container {
+    width: 100%;
+    margin: 2rem 0;
+  }
+
+  .tab-headers {
+    display: flex;
+    gap: 0.5rem;
+    border-bottom: 2px solid var(--color-border, #e5e7eb);
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  .tab-header {
+    padding: 0.75rem 1.5rem;
+    background: transparent;
+    border: none;
+    border-bottom: 3px solid transparent;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--color-text-secondary, #6b7280);
+    transition: all 0.2s ease;
+    position: relative;
+    bottom: -2px;
+  }
+
+  .tab-header:hover {
+    color: var(--color-primary, #3b82f6);
+    background: var(--color-bg-secondary, #f9fafb);
+  }
+
+  .tab-header.active {
+    color: var(--color-primary, #3b82f6);
+    border-bottom-color: var(--color-primary, #3b82f6);
+  }
+
+  .tab-contents {
+    padding: 1rem 0;
+  }
+
+  .tab-contents :global(.tab-panel) {
+    display: none;
+  }
+
+  .tab-contents :global(.tab-panel.active) {
+    display: block;
+    animation: fadeIn 0.3s ease;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @media (max-width: 640px) {
+    .tab-header {
+      padding: 0.5rem 1rem;
+      font-size: 0.9rem;
+    }
+  }
+</style>
+
+<script>
+  function initTabs() {
+    const containers = document.querySelectorAll('[data-tab-container]');
+    
+    containers.forEach(container => {
+      const headers = container.querySelectorAll('.tab-header');
+      const panels = container.querySelectorAll('.tab-panel');
+      
+      // Set initial active state
+      if (panels.length > 0) {
+        panels[0].classList.add('active');
+      }
+      
+      headers.forEach((header, index) => {
+        header.addEventListener('click', () => {
+          // Remove active class from all headers and panels
+          headers.forEach(h => {
+            h.classList.remove('active');
+            h.setAttribute('aria-selected', 'false');
+          });
+          panels.forEach(p => p.classList.remove('active'));
+          
+          // Add active class to clicked header and corresponding panel
+          header.classList.add('active');
+          header.setAttribute('aria-selected', 'true');
+          if (panels[index]) {
+            panels[index].classList.add('active');
+          }
+        });
+      });
+    });
+  }
+
+  // Initialize on page load
+  initTabs();
+
+  // Re-initialize after page navigation (for Astro view transitions)
+  document.addEventListener('astro:page-load', initTabs);
+</script>

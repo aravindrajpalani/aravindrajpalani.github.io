@@ -1,59 +1,19 @@
-import mdx from "@astrojs/mdx";
-import react from "@astrojs/react";
-import sitemap from "@astrojs/sitemap";
-import tailwindcss from "@tailwindcss/vite";
-import AutoImport from "astro-auto-import";
-import { defineConfig } from "astro/config";
-import remarkCollapse from "remark-collapse";
-import remarkToc from "remark-toc";
-import config from "./src/config/config.json";
+import { defineConfig } from 'astro/config';
+import mdx from '@astrojs/mdx';
+import sitemap from '@astrojs/sitemap';
+import tailwind from "@astrojs/tailwind";
+import { autoNewTabExternalLinks } from './src/autoNewTabExternalLinks';
 
-let highlighter;
-async function getHighlighter() {
-  if (!highlighter) {
-    const { getHighlighter } = await import("shiki");
-    highlighter = await getHighlighter({ theme: "one-dark-pro" , langs: ['kotlin']});
-  }
-  return highlighter;
-}
+import partytown from "@astrojs/partytown";
 
 // https://astro.build/config
 export default defineConfig({
-  site: config.site.base_url ? config.site.base_url : "https://www.aravindraj.dev",
-  base: config.site.base_path ? config.site.base_path : "/",
-  trailingSlash: config.site.trailing_slash ? "always" : "never",
-  vite: { plugins: [tailwindcss()] },
-  integrations: [
-    react(),
-    sitemap(),
-    AutoImport({
-      imports: [
-        "@/shortcodes/Button",
-        "@/shortcodes/Accordion",
-        "@/shortcodes/Notice",
-        "@/shortcodes/Video",
-        "@/shortcodes/Youtube",
-        "@/shortcodes/Tabs",
-        "@/shortcodes/Tab",
-      ],
-    }),
-    mdx(),
-  ],
+  site: 'https://www.aravindraj.dev',
+  integrations: [mdx(), sitemap(), tailwind(), partytown()],
   markdown: {
-    remarkPlugins: [
-      remarkToc,
-      [
-        remarkCollapse,
-        {
-          test: "Table of contents",
-        },
-      ],
-    ],
-    shikiConfig: {
-      theme: "one-dark-pro",
-      wrap: true,
-    },
     extendDefaultPlugins: true,
-    highlighter: getHighlighter,
-  },
+    rehypePlugins: [[autoNewTabExternalLinks, {
+      domain: 'localhost:4321'
+    }]]
+  }
 });

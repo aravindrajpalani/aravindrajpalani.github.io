@@ -1,0 +1,185 @@
+<svg viewBox="0 0 1400 900" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#141E30;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#243B55;stop-opacity:1" />
+    </linearGradient>
+    
+    <linearGradient id="interfaceGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#00d2ff;stop-opacity:0.9" />
+      <stop offset="100%" style="stop-color:#3a7bd5;stop-opacity:0.9" />
+    </linearGradient>
+    
+    <linearGradient id="classGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#f093fb;stop-opacity:0.9" />
+      <stop offset="100%" style="stop-color:#f5576c;stop-opacity:0.9" />
+    </linearGradient>
+    
+    <linearGradient id="abstractGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#a8edea;stop-opacity:0.9" />
+      <stop offset="100%" style="stop-color:#fed6e3;stop-opacity:0.9" />
+    </linearGradient>
+    
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    
+    <marker id="arrowBlue" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <polygon points="0 0, 10 3, 0 6" fill="#00d2ff"/>
+    </marker>
+    
+    <marker id="arrowPink" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <polygon points="0 0, 10 3, 0 6" fill="#f093fb"/>
+    </marker>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="1400" height="900" fill="url(#bgGradient)"/>
+  
+  <!-- Grid pattern -->
+  <defs>
+    <pattern id="grid" width="50" height="50" patternUnits="userSpaceOnUse">
+      <path d="M 50 0 L 0 0 0 50" fill="none" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
+    </pattern>
+  </defs>
+  <rect width="1400" height="900" fill="url(#grid)"/>
+  
+  <!-- Title -->
+  <text x="700" y="60" text-anchor="middle" fill="white" font-size="36" font-weight="bold" font-family="Arial">
+    Java Executor Framework Hierarchy
+  </text>
+  <text x="700" y="95" text-anchor="middle" fill="rgba(255,255,255,0.7)" font-size="24" font-family="Arial">
+    java.util.concurrent
+  </text>
+  
+  <!-- Legend -->
+  <g transform="translate(50, 120)">
+    <rect x="0" y="0" width="200" height="30" rx="5" fill="url(#interfaceGradient)" opacity="0.8"/>
+    <text x="100" y="20" text-anchor="middle" fill="white" font-size="18" font-weight="bold">Interface</text>
+    
+    <rect x="220" y="0" width="200" height="30" rx="5" fill="url(#abstractGradient)" opacity="0.8"/>
+    <text x="320" y="20" text-anchor="middle" fill="#333" font-size="18" font-weight="bold">Abstract Class</text>
+    
+    <rect x="440" y="0" width="200" height="30" rx="5" fill="url(#classGradient)" opacity="0.8"/>
+    <text x="540" y="20" text-anchor="middle" fill="white" font-size="18" font-weight="bold">Class</text>
+  </g>
+  
+  <!-- Thread and Runnable (Top Level) -->
+  <g transform="translate(100, 200)">
+    <!-- Runnable Interface -->
+    <rect x="0" y="0" width="200" height="80" rx="8" fill="url(#interfaceGradient)" stroke="white" stroke-width="2" filter="url(#glow)"/>
+    <text x="100" y="30" text-anchor="middle" fill="white" font-size="18" font-weight="bold">«interface»</text>
+    <text x="100" y="55" text-anchor="middle" fill="white" font-size="24" font-weight="bold">Runnable</text>
+  </g>
+  
+  <g transform="translate(400, 200)">
+    <!-- Thread Class -->
+    <rect x="0" y="0" width="200" height="80" rx="8" fill="url(#classGradient)" stroke="white" stroke-width="2" filter="url(#glow)"/>
+    <text x="100" y="30" text-anchor="middle" fill="white" font-size="18" font-weight="bold">«class»</text>
+    <text x="100" y="55" text-anchor="middle" fill="white" font-size="24" font-weight="bold">Thread</text>
+  </g>
+  
+  <!-- Implements arrow from Thread to Runnable -->
+  <path d="M 400 240 L 310 240" stroke="#00d2ff" stroke-width="2" fill="none" stroke-dasharray="5,5" marker-end="url(#arrowBlue)"/>
+  <text x="355" y="230" text-anchor="middle" fill="white" font-size="17" font-style="italic">implements</text>
+  
+  <!-- Executor Interface -->
+  <g transform="translate(850, 200)">
+    <rect x="0" y="0" width="200" height="80" rx="8" fill="url(#interfaceGradient)" stroke="white" stroke-width="2" filter="url(#glow)"/>
+    <text x="100" y="30" text-anchor="middle" fill="white" font-size="18" font-weight="bold">«interface»</text>
+    <text x="100" y="55" text-anchor="middle" fill="white" font-size="24" font-weight="bold">Executor</text>
+  </g>
+  
+  <!-- ExecutorService Interface -->
+  <g transform="translate(850, 350)">
+    <rect x="0" y="0" width="200" height="80" rx="8" fill="url(#interfaceGradient)" stroke="white" stroke-width="2" filter="url(#glow)"/>
+    <text x="100" y="30" text-anchor="middle" fill="white" font-size="18" font-weight="bold">«interface»</text>
+    <text x="100" y="55" text-anchor="middle" fill="white" font-size="24" font-weight="bold">ExecutorService</text>
+  </g>
+  
+  <!-- Extends arrow from ExecutorService to Executor -->
+  <path d="M 950 350 L 950 290" stroke="#00d2ff" stroke-width="3" fill="none" marker-end="url(#arrowBlue)"/>
+  <text x="980" y="320" fill="white" font-size="20" font-style="italic">extends</text>
+  
+  <!-- ScheduledExecutorService Interface -->
+  <g transform="translate(850, 500)">
+    <rect x="0" y="0" width="200" height="80" rx="8" fill="url(#interfaceGradient)" stroke="white" stroke-width="2" filter="url(#glow)"/>
+    <text x="100" y="30" text-anchor="middle" fill="white" font-size="18" font-weight="bold">«interface»</text>
+    <text x="100" y="50" text-anchor="middle" fill="white" font-size="21" font-weight="bold">ScheduledExecutor</text>
+    <text x="100" y="68" text-anchor="middle" fill="white" font-size="21" font-weight="bold">Service</text>
+  </g>
+  
+  <!-- Extends arrow from ScheduledExecutorService to ExecutorService -->
+  <path d="M 950 500 L 950 440" stroke="#00d2ff" stroke-width="3" fill="none" marker-end="url(#arrowBlue)"/>
+  <text x="980" y="470" fill="white" font-size="20" font-style="italic">extends</text>
+  
+  <!-- AbstractExecutorService -->
+  <g transform="translate(550, 500)">
+    <rect x="0" y="0" width="220" height="80" rx="8" fill="url(#abstractGradient)" stroke="white" stroke-width="2" filter="url(#glow)"/>
+    <text x="110" y="30" text-anchor="middle" fill="#333" font-size="18" font-weight="bold">«abstract class»</text>
+    <text x="110" y="50" text-anchor="middle" fill="#333" font-size="24" font-weight="bold">AbstractExecutor</text>
+    <text x="110" y="68" text-anchor="middle" fill="#333" font-size="24" font-weight="bold">Service</text>
+  </g>
+  
+  <!-- Implements arrow from AbstractExecutorService to ExecutorService -->
+  <path d="M 770 540 L 840 400" stroke="#00d2ff" stroke-width="2" fill="none" stroke-dasharray="5,5" marker-end="url(#arrowBlue)"/>
+  <text x="780" y="460" fill="white" font-size="20" font-style="italic">implements</text>
+  
+  <!-- ThreadPoolExecutor -->
+  <g transform="translate(320, 680)">
+    <rect x="0" y="0" width="220" height="80" rx="8" fill="url(#classGradient)" stroke="white" stroke-width="2" filter="url(#glow)"/>
+    <text x="110" y="30" text-anchor="middle" fill="white" font-size="18" font-weight="bold">«class»</text>
+    <text x="110" y="50" text-anchor="middle" fill="white" font-size="24" font-weight="bold">ThreadPool</text>
+    <text x="110" y="68" text-anchor="middle" fill="white" font-size="24" font-weight="bold">Executor</text>
+  </g>
+  
+  <!-- Extends arrow from ThreadPoolExecutor to AbstractExecutorService -->
+  <path d="M 430 680 L 660 590" stroke="#f093fb" stroke-width="3" fill="none" marker-end="url(#arrowPink)"/>
+  <text x="520" y="630" fill="white" font-size="20" font-style="italic">extends</text>
+  
+  <!-- ScheduledThreadPoolExecutor -->
+  <g transform="translate(640, 680)">
+    <rect x="0" y="0" width="260" height="80" rx="8" fill="url(#classGradient)" stroke="white" stroke-width="2" filter="url(#glow)"/>
+    <text x="130" y="30" text-anchor="middle" fill="white" font-size="18" font-weight="bold">«class»</text>
+    <text x="130" y="50" text-anchor="middle" fill="white" font-size="24" font-weight="bold">ScheduledThreadPool</text>
+    <text x="130" y="68" text-anchor="middle" fill="white" font-size="24" font-weight="bold">Executor</text>
+  </g>
+  
+  <!-- Extends arrow from ScheduledThreadPoolExecutor to ThreadPoolExecutor -->
+  <path d="M 640 720 L 550 720" stroke="#f093fb" stroke-width="3" fill="none" marker-end="url(#arrowPink)"/>
+  <text x="595" y="710" fill="white" font-size="20" font-style="italic">extends</text>
+  
+  <!-- Implements arrow from ScheduledThreadPoolExecutor to ScheduledExecutorService -->
+  <path d="M 770 680 L 950 590" stroke="#00d2ff" stroke-width="2" fill="none" stroke-dasharray="5,5" marker-end="url(#arrowBlue)"/>
+  <text x="840" y="630" fill="white" font-size="14" font-style="italic">implements</text>
+  
+  <!-- ForkJoinPool (additional) -->
+  <g transform="translate(1050, 680)">
+    <rect x="0" y="0" width="200" height="80" rx="8" fill="url(#classGradient)" stroke="white" stroke-width="2" filter="url(#glow)"/>
+    <text x="100" y="30" text-anchor="middle" fill="white" font-size="18" font-weight="bold">«class»</text>
+    <text x="100" y="50" text-anchor="middle" fill="white" font-size="24" font-weight="bold">ForkJoinPool</text>
+  </g>
+  
+  <!-- Extends arrow from ForkJoinPool to AbstractExecutorService -->
+  <path d="M 1150 680 L 770 590" stroke="#f093fb" stroke-width="3" fill="none" marker-end="url(#arrowPink)"/>
+  <text x="920" y="630" fill="white" font-size="12" font-style="italic">extends</text>
+  
+  <!-- Watermark -->
+  <text x="1320" y="870" text-anchor="end" fill="rgba(255,255,255,0.5)" font-size="18" font-family="Arial">
+    aravindraj.dev
+  </text>
+  
+  <!-- Key relationships note -->
+  <g transform="translate(50, 800)">
+    <text x="0" y="0" fill="rgba(255,255,255,0.8)" font-size="14" font-family="Arial">
+      <tspan x="0" dy="0">Key Points:</tspan>
+      <tspan x="0" dy="20">• Solid arrows represent inheritance (extends)</tspan>
+      <tspan x="0" dy="20">• Dashed arrows represent interface implementation (implements)</tspan>
+      <tspan x="0" dy="20">• Thread class implements Runnable interface</tspan>
+    </text>
+  </g>
+</svg>

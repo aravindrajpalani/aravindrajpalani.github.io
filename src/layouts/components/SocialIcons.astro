@@ -1,0 +1,64 @@
+---
+const { source, className } = Astro.props;
+
+import {
+  IoLogoGithub,
+  IoLogoLinkedin,
+  IoLogoTwitter,
+  IoLogoYoutube,
+} from "react-icons/io5";
+
+const {
+  twitter,
+  youtube,
+  linkedin,
+  github,
+} = source;
+---
+
+<ul class={className}>
+  
+ 
+  {
+    youtube && (
+      <li class="inline-block">
+        <a
+          aria-label="youtube"
+          href={youtube}
+          target="_blank"
+          rel="noopener noreferrer nofollow"
+        >
+          <IoLogoYoutube />
+        </a>
+      </li>
+    )
+  }
+  {
+    linkedin && (
+      <li class="inline-block">
+        <a
+          aria-label="linkedin"
+          href={linkedin}
+          target="_blank"
+          rel="noopener noreferrer nofollow"
+        >
+          <IoLogoLinkedin />
+        </a>
+      </li>
+    )
+  }
+  {
+    github && (
+      <li class="inline-block">
+        <a
+          aria-label="github"
+          href={github}
+          target="_blank"
+          rel="noopener noreferrer nofollow"
+        >
+          <IoLogoGithub />
+        </a>
+      </li>
+    )
+  }
+ </ul>

@@ -1,0 +1,213 @@
+---
+title: 'Kotlin Coroutines: Understanding launch{} vs async{}'
+meta_title: 'Kotlin Coroutines: launch{} vs async{} - When and Why to Use Each'
+description: 'Learn the difference between launch{} and async{} . Understand their use cases, return types (Job vs Deferred), and how to run concurrent tasks with real code examples.'
+slug: 'launch-vs-async-coroutine-builders'
+tags: ["kotlin-coroutines", "launch", "async", "coroutine-builders"]
+pubDate: '2025-09-13T10:31:00Z'
+coverImage: './launch-vs-async.png'
+---
+import Tabs from '../../../components/Tabs.astro';
+
+When working with Kotlin coroutines, choosing between launch{} and async{} builders is a common decision point. Both serve different purposes and understanding their use cases is crucial for building efficient asynchronous applications.
+
+### Suspend Functions
+
+In our previous exploration of [Kotlin Coroutines Internals](https://www.aravindraj.dev/kotlin-coroutines-internals-cps/), we covered how Kotlin transforms suspend functions using CPS and State Machines. Suspend functions form the foundation of Kotlin coroutines. These functions, marked with the suspend keyword, can perform long-running operations without blocking threads.
+
+###### Important characteristics of suspend functions:
+
+- Regular functions can be called from within suspend functions
+- Suspend functions cannot be called from regular functions
+- Suspend functions can only be invoked from other suspend functions or coroutines  
+   <br></br>
+  To execute suspend functions, we need coroutine builders. The primary builders are <span style="color:black; font-weight:bold;">launch{}</span>, <span style="color:black; font-weight:bold;">async{}</span>, and <span style="color:black; font-weight:bold;">runBlocking{}</span>.
+
+### Understanding launch{ }
+
+launch{ } coroutine builder launches a new coroutine without blocking the current thread. Use launch{} for "fire and forget" scenarios where you don't need to access the result of the coroutine from outside. launch{} is an extension function on CoroutineScope. Here's its signature:
+
+```kotlin
+public fun CoroutineScope.launch(
+    context: CoroutineContext = EmptyCoroutineContext,
+    start: CoroutineStart = CoroutineStart.DEFAULT,
+    block: suspend CoroutineScope.() -> Unit
+): Job {
+}
+```
+
+###### context:
+
+The coroutine context defines the context in which the coroutine runs (we'll cover this in upcoming blogs).
+
+###### start:
+
+By default, the coroutine is immediately scheduled for execution. We can set the start parameter to CoroutineStart.LAZY to start the coroutine lazily, then explicitly start it by calling start() function on returned Job object of coroutine.
+
+###### block: suspend CoroutineScope.() -> Unit
+
+The block parameter of the launch function is a suspending lambda with receiver of type CoroutineScope.
+This means:
+- The lambda is suspending, so you can call other suspend functions inside it.
+- It has a receiver of type CoroutineScope, so we can call coroutine scope functions directly inside the block (like launch, async, etc.). The CoroutineScope that we access inside the lambda is the same scope on which the launch function is called.
+
+###### Job (Return Type) :
+
+The return type of launch is **Job** which is reference to the started coroutine.  
+
+**join()** is a suspending function that can be called on a Job object returned by the coroutine to suspend the calling coroutine until the coroutine represented by that Job has completed.  
+Use job.cancel() to cancel the coroutine.
+
+<Tabs tabs={['launch', 'launch with join()']}>
+  <div class="tab-panel">
+    
+```kotlin
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import kotlin.time.TimeSource
+
+fun main() = runBlocking<Unit> {
+    val mark = TimeSource.Monotonic.markNow()
+    launch {
+        val response1 = callAPI(1)
+        println("Got $response1 after ${mark.elapsedNow().inWholeMilliseconds} ms")
+    }
+
+    launch {
+        val response2 = callAPI(2)
+        println("Got $response2 after ${mark.elapsedNow().inWholeMilliseconds} ms")
+    }
+
+    println("End of runBlocking after ${mark.elapsedNow().inWholeMilliseconds} ms")
+}
+
+suspend fun callAPI(number: Int): String {
+    delay(500)
+    return "Response $number"
+}
+
+```
+**Output:**  
+End of runBlocking after 19 ms    
+Got Response 1 after 555 ms  
+Got Response 2 after 560 ms  
+
+Demonstrates fire-and-forget behavior of launch{}. runBlocking{ } completes after just 19 ms while the two launch{ } coroutines started inside runBlocking{ } continue running concurrently.
+  </div>
+  <div class="tab-panel">
+    ```kotlin
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import kotlin.time.TimeSource
+
+fun main() = runBlocking<Unit> {
+    val mark = TimeSource.Monotonic.markNow()
+    val job1 = launch {
+        val response1 = callAPI(1)
+        println("Got $response1 after ${mark.elapsedNow().inWholeMilliseconds} ms")
+    }
+
+    val job2 = launch {
+        val response2 = callAPI(2)
+        println("Got $response2 after ${mark.elapsedNow().inWholeMilliseconds} ms")
+    }
+    
+    job1.join()
+    job2.join()
+    println("End of runBlocking after ${mark.elapsedNow().inWholeMilliseconds}")
+}
+
+suspend fun callAPI(number: Int): String {
+    delay(500)
+    return "Response $number"
+}
+
+```
+**Output:**  
+Got Response 1 after 531 ms  
+Got Response 2 after 543 ms  
+End of runBlocking after 543  
+
+This example shows how to wait for launched coroutines to complete. By calling join() on the returned Job objects, we make the calling coroutine ( runBlocking{ } ) wait until both launched coroutines finish their work before proceeding.
+  </div>
+</Tabs>
+
+
+
+
+
+
+
+
+### Understanding async{ }
+
+async coroutine builder is similar to launch. If we need to access the result of a coroutine, we can use async coroutine builder. This is the signature of async:  
+```kotlin
+public fun <T> CoroutineScope.async(
+    context: CoroutineContext = EmptyCoroutineContext,
+    start: CoroutineStart = CoroutineStart.DEFAULT,
+    block: suspend CoroutineScope.() -> T
+): Deferred<T> {
+}
+```
+The key difference between launch and async is:
+
+- launch returns a Job
+- async returns a Deferred
+   Deferred is a subtype of Job (a Job with a result). We can do all operations with Deferred that we can do with Job, plus it also holds a result.
+
+To get the result from deferred object **await()** function is called. await() is a suspending function that can be called on a Deferred object returned by an async coroutine to suspend the calling coroutine until the result is available.
+It waits for the asynchronous computation to complete and returns the result. The result of async should be the last expression of the async lambda.
+async coroutine can be cancelled by calling **cancel()** function on deferred object. Supports lazy start with start parameter set to CoroutineStart.LAZY similar to launch coroutine and later can explicitly start it by calling start() function on returned Deferred object of coroutine.
+
+```kotlin
+
+import kotlinx.coroutines.async
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.runBlocking
+import kotlin.time.TimeSource
+
+fun main() = runBlocking<Unit> {
+    val mark = TimeSource.Monotonic.markNow()
+
+    val deferred1 = async {
+        val response1 = callAPI(1)
+        println("Got $response1 after ${mark.elapsedNow().inWholeMilliseconds} ms")
+        response1
+    }
+
+    val deferred2 = async {
+        val response2 = callAPI(2)
+        println("Got $response2 after ${mark.elapsedNow().inWholeMilliseconds} ms")
+        response2
+    }
+
+    val responseList = listOf(deferred1.await(), deferred2.await())
+    println("Got ${responseList} after ${mark.elapsedNow().inWholeMilliseconds} ms")
+}
+
+suspend fun callAPI(number: Int): String {
+    delay(500)
+    return "Response $number"
+}
+
+```
+
+**Output:**  
+Got Response 1 after 558 ms  
+Got Response 2 after 570 ms  
+Got [Response 1, Response 2] after 586 ms  
+Above example demonstrates async{} for concurrent execution with result collection. Each async block returns a Deferred object. The last expression in the async block becomes the result. await() suspends until the result is available and returns it.
+
+| Aspects               | launch {}                         | async {}                             |
+|:----------------------|:-----------------------------------:|:--------------------------------------:|
+| **Primary Use Case**   | Fire-and-forget operations          | Operations that return results         |
+| **Result Access**      | No result access                    | Via await() function                 |
+| **Cancellation**       | job.cancel()                      | deferred.cancel()                    |
+| **Lazy Start**         | CoroutineStart.LAZY               | CoroutineStart.LAZY                  |  
+
+### Key Takeaways
+
+Understanding when to use launch{} vs async{} is fundamental to writing efficient Kotlin coroutines. The choice comes down to a simple question: Do you need the result? If yes, use async{} and await(). If no, use launch{} and optionally join() if you need to wait for completion. Both enable powerful concurrent programming that keeps your applications efficient.
